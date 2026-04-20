@@ -5,13 +5,18 @@ from fastapi import FastAPI
 from redis.asyncio import Redis
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
+from fastapi.middleware.cors import CORSMiddleware
 
 from src.config import settings
 from src.infrastructure.services.open_weather_client import OpenWeatherClient
 from src.presentation.rate_limiter import limiter
-from src.presentation.routers import history, status, weather
+from src.presentation.routers import forecast, history, status, weather
 
 HTTP_CLIENT_TIMEOUT_SECONDS = 10.0
+
+origins = [
+    "http://localhost:3000",
+]
 
 
 @asynccontextmanager
@@ -34,9 +39,18 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Bemagro Weather API", lifespan=lifespan)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.include_router(weather.router, prefix="/api")
+app.include_router(forecast.router, prefix="/api")
 app.include_router(history.router, prefix="/api")
 app.include_router(status.router, prefix="/api")
