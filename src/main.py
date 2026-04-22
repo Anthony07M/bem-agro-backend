@@ -16,6 +16,7 @@ HTTP_CLIENT_TIMEOUT_SECONDS = 10.0
 
 origins = [
     "http://localhost:3000",
+    "https://bem-agro-frontend.vercel.app"
 ]
 
 
