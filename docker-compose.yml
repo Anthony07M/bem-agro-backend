@@ -1,23 +1,23 @@
 services:
-  # api:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.dev
-  #   container_name: bemagro-api
-  #   ports:
-  #     - "8000:8000"
-  #   volumes:
-  #     - ./src:/app/src
-  #     - ./data:/app/data
-  #   env_file:
-  #     - .env
-  #   environment:
-  #     - REDIS_URL=redis://redis:6379/0
-  #     - DATABASE_URL=sqlite+aiosqlite:///./data/app.db
-  #   depends_on:
-  #     - db
-  #     - redis
-  #   restart: unless-stopped
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: bemagro-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/app/src
+      - ./data:/app/data
+    env_file:
+      - .env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - DATABASE_URL=sqlite+aiosqlite:///./data/app.db
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
 
   db:
     image: busybox:stable
